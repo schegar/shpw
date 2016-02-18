@@ -21,5 +21,15 @@
   "bugs": {
     "url": "https://github.com/schegar/shpw/issues"
   },
-  "homepage": "https://github.com/schegar/shpw#readme"
+  "homepage": "https://github.com/schegar/shpw#readme",
+  "dependencies": {
+    "bcryptjs": "^2.3.0",
+    "body-parser": "^1.15.0",
+    "crypto-js": "^3.1.6",
+    "express": "^4.13.4",
+    "jsonwebtoken": "^5.7.0",
+    "sequelize": "^3.19.3",
+    "sqlite3": "^3.1.1",
+    "underscore": "^1.8.3"
+  }
 }
