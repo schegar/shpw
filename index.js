@@ -3,6 +3,7 @@ var db = require("./db.js");
 var _ = require("underscore");
 var bodyParser = require("body-parser");
 var middleware = require("./middleware.js")(db);
+var cryptojs = require("crypto-js");
 
 var app = express();
 var PORT = process.env.PORT || 3000;
@@ -13,9 +14,54 @@ app.get('/', function (req, res) {
   res.send('Hello World')
 })
 
-app.get("/passwords", function (req, res) {
-	
-})
+// GET /accounts?completed=true?q=house
+app.get("/accounts", middleware.requireAuthentication, function(req, res){
+	var query = req.query;
+	/*var where = {};
+
+	//where.id = req.user.get("id");
+
+	if (query.hasOwnProperty("completed") && query.completed === "true") {
+		where.completed = true;
+	} else if (query.hasOwnProperty("completed") && query.completed === "false") {
+		where.completed = false;
+	}
+	if (query.hasOwnProperty("q") && query.q.length > 0) {
+		where.description = {
+			$like: "%" + query.q + "%"
+		};
+	}*/
+
+	req.user.getAccounts().then(function (accounts) {
+
+		var decryptedAccounts = [];
+
+		accounts.forEach(function (account) {
+			var decryptedAccount = _.pick(account, "name", "username", "password");
+			var bytes = cryptojs.AES.decrypt(account.password, account.username);
+			decryptedAccount.password = bytes.toString(cryptojs.enc.Utf8);
+			decryptedAccounts.push(decryptedAccount);
+		});	
+		res.send(decryptedAccounts);
+	}, function (e) {
+		res.status(500).send();
+	});	
+});
+
+// POST /accounts
+app.post("/accounts", middleware.requireAuthentication, function (req, res) {
+	var body = _.pick(req.body, "name", "username", "password");
+
+	db.account.create(body).then(function (account) {		
+		req.user.addAccount(account).then(function () {
+			return account.reload();
+		}).then(function function_name(account) {
+			res.json(account.toJSON());	
+		})
+	}, function (e) {
+		res.status(400).json(e);
+	});
+});
 
 //POST /users
 app.post("/users", function (req, res) {

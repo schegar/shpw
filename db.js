@@ -9,8 +9,13 @@ var db = {};
 
 db.user = sequelize.import(__dirname + "/models/user.js");
 db.token = sequelize.import(__dirname + "/models/token.js");
+db.account = sequelize.import(__dirname + "/models/account.js");
 
 db.sequelize = sequelize;
 db.Sequelize = Sequelize;
+
+
+db.account.belongsTo(db.user);
+db.user.hasMany(db.account);
 
 module.exports = db;
