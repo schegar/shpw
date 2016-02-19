@@ -14,43 +14,64 @@ app.get('/', function (req, res) {
   res.send('Hello World')
 })
 
-// GET /accounts?completed=true?q=house
+// GET /accounts?n=facebook&u=test@test.com
 app.get("/accounts", middleware.requireAuthentication, function(req, res){
 	var query = req.query;
-	/*var where = {};
+	var where = {};
 
-	//where.id = req.user.get("id");
-
-	if (query.hasOwnProperty("completed") && query.completed === "true") {
-		where.completed = true;
-	} else if (query.hasOwnProperty("completed") && query.completed === "false") {
-		where.completed = false;
-	}
-	if (query.hasOwnProperty("q") && query.q.length > 0) {
-		where.description = {
-			$like: "%" + query.q + "%"
+	if (query.hasOwnProperty("n") && query.n.length > 0) {
+		where.name = {
+			$like: "%" + query.n + "%"
 		};
-	}*/
+	}
 
-	req.user.getAccounts().then(function (accounts) {
+	if (query.hasOwnProperty("u") && query.u.length > 0) {
+		where.username = {
+			$like: "%" + query.u + "%"
+		};
+	}
 
+	req.user.getAccounts({where: where}).then(function (accounts) {
 		var decryptedAccounts = [];
 
 		accounts.forEach(function (account) {
-			var decryptedAccount = _.pick(account, "name", "username", "password");
-			var bytes = cryptojs.AES.decrypt(account.password, account.username);
-			decryptedAccount.password = bytes.toString(cryptojs.enc.Utf8);
-			decryptedAccounts.push(decryptedAccount);
+			decryptedAccounts.push(account.decryptPassword());
 		});	
+
 		res.send(decryptedAccounts);
 	}, function (e) {
 		res.status(500).send();
 	});	
 });
 
+// GET /accounts/:id
+app.get("/accounts/:id", middleware.requireAuthentication, function (req, res) {
+	var accountId = parseInt(req.params.id);
+
+	db.account.findOne({
+		where: {
+			id: accountId,
+			userId: req.user.get("id")
+		}
+	}).then(function (account) {
+		if (!!account) {
+			res.json(account.decryptPassword());
+		} else {
+			res.status(404).send();
+		}
+	}, function (e) {
+		res.status(500).send();
+	});
+});
+
+
 // POST /accounts
 app.post("/accounts", middleware.requireAuthentication, function (req, res) {
-	var body = _.pick(req.body, "name", "username", "password");
+	var body = _.pick(req.body, "name", "username", "password", "comment");
+
+	//body.salt = req.user.password_hash;
+
+	//console.log(body);
 
 	db.account.create(body).then(function (account) {		
 		req.user.addAccount(account).then(function () {
@@ -61,6 +82,69 @@ app.post("/accounts", middleware.requireAuthentication, function (req, res) {
 	}, function (e) {
 		res.status(400).json(e);
 	});
+});
+
+// DELETE /accounts/:id
+app.delete("/accounts/:id", middleware.requireAuthentication, function (req, res) {
+	var accountId = parseInt(req.params.id);
+
+	db.account.destroy({
+		where: {
+			id: accountId,
+			userId: req.user.get("id")
+		}
+	}).then(function (rowsDeleted) {
+		if (rowsDeleted === 0) {
+			res.status(404).json({
+				error: "No account with id"
+			});
+		} else {
+			res.status(204).send();
+		}
+	}, function () {
+		res.status(500).send();
+	})
+});
+
+// PUT /accounts/:id
+app.put("/accounts/:id", middleware.requireAuthentication, function (req, res) {
+	var accountId = parseInt(req.params.id, 10);
+	var body = _.pick(req.body, "name", "username", "password");
+	var attributes = {};
+
+	if (body.hasOwnProperty("name")) {
+		attributes.name = body.name;
+	};
+
+	if (body.hasOwnProperty("username")) {
+		attributes.username = body.username;
+	};
+
+	if (body.hasOwnProperty("password")) {
+		attributes.password = body.password;
+	};
+
+	console.log(attributes);
+
+	db.account.findOne({
+		where: {
+			id: accountId,
+			userId: req.user.get("id")
+		}
+	}).then(function (account) {
+		if (account) {
+			account.update(attributes).then(function (account) {
+				res.json(account.toJSON());
+			}, function (e) {
+				res.status(400).json(e);
+			});
+		} else {
+			res.status(404).send();
+		}
+	}, function () {
+		res.status(500).send();
+	});
+
 });
 
 //POST /users
