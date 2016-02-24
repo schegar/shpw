@@ -5,8 +5,6 @@ app.AccountsView = Backbone.View.extend({
 
 
     initialize: function( initialAccounts ) {      
-        //this.collection = new app.Accounts( initialAccounts );
-        //console.log(Cookies.get("Auth"));
         this.collection = new app.Accounts();
 
         $.ajaxSetup({
@@ -14,11 +12,9 @@ app.AccountsView = Backbone.View.extend({
         });        
 
         this.collection.fetch({
-            //beforeSend: setHeader,
             reset:true
         });
-        //console.log(this.collection);
-        //this.render();
+        this.render();
 
         this.listenTo(this.collection, "add", this.renderAccount);
         this.listenTo(this.collection, "reset", this.render);
@@ -30,7 +26,6 @@ app.AccountsView = Backbone.View.extend({
 
     addAccount: function (e) {
         e.preventDefault();
-        console.log("added");
         var formData = {};
 
         $("#addAccount div").children("input").each(function (i, el) {
@@ -42,15 +37,12 @@ app.AccountsView = Backbone.View.extend({
         this.collection.create(formData);
     },
 
-    // render library by rendering each book in its collection
     render: function() {
         this.collection.each(function( item ) {
             this.renderAccount(item);
         }, this );
     },
 
-    // render a book by creating a BookView and appending the
-    // element it renders to the library's element
     renderAccount: function( item ) {
         var accountView = new app.AccountView({
             model: item
@@ -58,7 +50,3 @@ app.AccountsView = Backbone.View.extend({
         this.$("#accountTable").append( accountView.render().el );
     }
 });
-
-var setHeader = function (xhr) {
-    xhr.setRequestHeader("Auth", Cookies.get("Auth"));
-}

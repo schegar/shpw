@@ -71,8 +71,6 @@ app.get("/accounts/:id", middleware.requireAuthentication, function (req, res) {
 app.post("/accounts", middleware.requireAuthentication, function (req, res) {
 	var body = _.pick(req.body, "name", "username", "password", "comment");
 
-	console.log(body);
-
 	db.account.create(body).then(function (account) {		
 		req.user.addAccount(account).then(function () {
 			return account.reload();

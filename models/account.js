@@ -50,7 +50,6 @@ module.exports = function (sequelize, DataTypes) {
 				//console.log("Salt: "+this.salt);
 				var bytes = cryptojs.AES.decrypt(this.password, this.salt);
 				decryptedAccount.password = bytes.toString(cryptojs.enc.Utf8);
-				console.log(decryptedAccount);
 				return decryptedAccount;
 			}
 		}
