@@ -46,10 +46,11 @@ module.exports = function (sequelize, DataTypes) {
 	}, {
 		instanceMethods: {
 			decryptPassword: function () {				
-				var decryptedAccount = _.pick(this, "name", "username", "password", "comment");
+				var decryptedAccount = _.pick(this, "id", "name", "username", "password", "comment");
 				//console.log("Salt: "+this.salt);
 				var bytes = cryptojs.AES.decrypt(this.password, this.salt);
 				decryptedAccount.password = bytes.toString(cryptojs.enc.Utf8);
+				console.log(decryptedAccount);
 				return decryptedAccount;
 			}
 		}

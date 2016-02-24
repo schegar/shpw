@@ -8,13 +8,16 @@ app.AccountsView = Backbone.View.extend({
         //this.collection = new app.Accounts( initialAccounts );
         //console.log(Cookies.get("Auth"));
         this.collection = new app.Accounts();
-        
+
+        $.ajaxSetup({
+            headers: {"Auth": Cookies.get("Auth")}
+        });        
 
         this.collection.fetch({
-            beforeSend: setHeader,
-            reset:true,
+            //beforeSend: setHeader,
+            reset:true
         });
-        console.log(this.collection);
+        //console.log(this.collection);
         //this.render();
 
         this.listenTo(this.collection, "add", this.renderAccount);
@@ -36,7 +39,7 @@ app.AccountsView = Backbone.View.extend({
             }
         });
 
-        this.collection.add(new app.Account(formData));
+        this.collection.create(formData);
     },
 
     // render library by rendering each book in its collection

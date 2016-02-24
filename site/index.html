@@ -89,8 +89,10 @@
 
 		<script type="text/javascript">
 
-			if (typeof Cookies.get("Auth") === undefined) {
-				console.log()
+			if (typeof Cookies.get("Auth") === "undefined") {
+				window.location = "/login.html";
+			} else {
+				console.log(Cookies.get("Auth"));
 			}
 			
 			/*function addAccount() {				

@@ -62,10 +62,9 @@
             type: "POST",
             data: loginDetails,
             success: function (data, textStatus, request) {
-              console.log(data);
               var token = request.getResponseHeader("Auth");
               Cookies.set("Auth", token);
-              console.log(token);
+              window.location = "/index.html"
             },
             contentType: "application/json",
             dataType: "json"
