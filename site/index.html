@@ -1,0 +1,123 @@
+<!DOCTYPE HTML>
+<html>
+	<head>
+	    <meta charset="UTF-8">
+	    <title>Title</title>
+	    <link href="css/bootstrap.min.css" rel="stylesheet">
+	</head>
+	<body>
+
+		<div class="vertical-center">
+			<div class="container">
+				<div id="accounts">
+					<div class="row">
+						<div class="col-md-4 col-md-offset-4 well">
+							<form id="addAccount" onsubmit="return addAccount();">
+
+							<div>
+
+								<div class="form-group">
+									<label >Name</label>
+									<div class="input-group">
+										<span class="input-group-addon">
+											<i class="glyphicon glyphicon-user"></i>
+										</span>
+										<input class="form-control" type="text" name="name" id="name"/>
+									</div>							
+								</div>
+									
+								<div class="form-group">
+									<label>Username</label>
+									<div class="input-group">
+										<span class="input-group-addon">
+											<i class="glyphicon glyphicon-comment"></i>
+										</span>
+										<input class="form-control" type="text" name="username" id="username"/>
+									</div>						
+								</div>
+
+								<div class="form-group">
+									<label>Password</label>
+									<div class="input-group">
+										<span class="input-group-addon">
+											<i class="glyphicon glyphicon-comment"></i>
+										</span>
+										<input class="form-control" type="text" name="password" id="password"/>
+									</div>						
+								</div>
+
+								<div class="form-group">
+									<button class="btn btn-primary btn-block" id="add">Add</button>	
+								</div>	
+
+							</div>
+
+							</form>
+						</div>
+					</div>
+
+					<div class="row">
+						<div class="col-md-8 col-md-offset-2 well">
+							<table id="accountTable" class="table table-striped">
+								<thead>
+									<tr><td>Name</td><td>Username</td><td>Password</td></tr>
+								</thead>
+								<tbody>
+									<script type="text/template" id="accountTemplate">
+										<td><%= name %></td>
+										<td><%= username %></td>
+										<td><%= password %></td>
+										<td><button class="delete">Delete</button></td>
+									</script>
+								</tbody>
+							</table>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		
+		<script src="js/js.cookie.js"></script>
+		<script src="js/lib/jquery-2.2.0.min.js"></script>
+        <script src="js/lib/underscore.js"></script>
+        <script src="js/lib/backbone-min.js"></script>
+        <script src="js/models/account.js"></script>
+        <script src="js/collections/accounts.js"></script>        
+        <script src="js/views/account.js"></script>
+        <script src="js/views/accounts.js"></script>
+        <script src="js/app.js"></script>
+
+		<script type="text/javascript">
+
+			if (typeof Cookies.get("Auth") === undefined) {
+				console.log()
+			}
+			
+			/*function addAccount() {				
+				event.preventDefault();
+		        var account = JSON.stringify({
+		            name: $("#name").val(),
+		            username: $("#username").val(),
+		            password: $("#password").val()
+		        });
+
+		        $.ajax({
+		            url: "/accounts",
+		            type: "POST",
+		            data: loginDetails,
+		            success: function (data, textStatus, request) {
+		              console.log(data);
+		              var token = request.getResponseHeader("Auth");
+		              Cookies.set("Auth", token);
+		            },
+		            contentType: "application/json",
+		            dataType: "json"
+		          });
+
+			}*/
+
+
+		</script>
+
+	</body>
+</html>

@@ -40,7 +40,8 @@ module.exports = function (sequelize, DataTypes) {
 			type: DataTypes.TEXT,
 			validate: {
 				len: [0, 500]
-			}
+			},
+			defaultValue: ""
 		}
 	}, {
 		instanceMethods: {

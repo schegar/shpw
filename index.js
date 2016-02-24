@@ -4,10 +4,12 @@ var _ = require("underscore");
 var bodyParser = require("body-parser");
 var middleware = require("./middleware.js")(db);
 var cryptojs = require("crypto-js");
+var path = require("path");
 
 var app = express();
 var PORT = process.env.PORT || 3000;
 
+app.use(express.static(path.join(__dirname, "site")));
 app.use(bodyParser.json());
 
 app.get('/', function (req, res) {
@@ -69,10 +71,6 @@ app.get("/accounts/:id", middleware.requireAuthentication, function (req, res) {
 app.post("/accounts", middleware.requireAuthentication, function (req, res) {
 	var body = _.pick(req.body, "name", "username", "password", "comment");
 
-	//body.salt = req.user.password_hash;
-
-	//console.log(body);
-
 	db.account.create(body).then(function (account) {		
 		req.user.addAccount(account).then(function () {
 			return account.reload();
@@ -80,6 +78,7 @@ app.post("/accounts", middleware.requireAuthentication, function (req, res) {
 			res.json(account.toJSON());	
 		})
 	}, function (e) {
+		console.log(e);
 		res.status(400).json(e);
 	});
 });
@@ -87,6 +86,8 @@ app.post("/accounts", middleware.requireAuthentication, function (req, res) {
 // DELETE /accounts/:id
 app.delete("/accounts/:id", middleware.requireAuthentication, function (req, res) {
 	var accountId = parseInt(req.params.id);
+
+	console.log("Delete");
 
 	db.account.destroy({
 		where: {
@@ -179,7 +180,7 @@ app.post("/users/login", function (req, res) {
 
 })
 
-db.sequelize.sync({force: true}).then(function () {
+db.sequelize.sync().then(function () {
 	app.listen(PORT, function() {
 		console.log("Express listening on port " + PORT + " !");
 	});
