@@ -27,7 +27,6 @@ module.exports = function (sequelize, DataTypes) {
 			},
 			set: function (value) {
 				var salt = bcrypt.genSaltSync(10);
-				//console.log("Salt: "+salt.green);
 				var decrypted =	cryptojs.AES.encrypt(value, salt).toString(); 	
 				this.setDataValue("salt", salt);
 				this.setDataValue("password", decrypted);
@@ -47,7 +46,6 @@ module.exports = function (sequelize, DataTypes) {
 		instanceMethods: {
 			decryptPassword: function () {				
 				var decryptedAccount = _.pick(this, "id", "name", "username", "password", "comment");
-				//console.log("Salt: "+this.salt);
 				var bytes = cryptojs.AES.decrypt(this.password, this.salt);
 				decryptedAccount.password = bytes.toString(cryptojs.enc.Utf8);
 				return decryptedAccount;

@@ -87,8 +87,6 @@ app.post("/accounts", middleware.requireAuthentication, function (req, res) {
 app.delete("/accounts/:id", middleware.requireAuthentication, function (req, res) {
 	var accountId = parseInt(req.params.id);
 
-	console.log("Delete");
-
 	db.account.destroy({
 		where: {
 			id: accountId,
@@ -125,8 +123,6 @@ app.put("/accounts/:id", middleware.requireAuthentication, function (req, res) {
 		attributes.password = body.password;
 	};
 
-	console.log(attributes);
-
 	db.account.findOne({
 		where: {
 			id: accountId,
@@ -151,7 +147,6 @@ app.put("/accounts/:id", middleware.requireAuthentication, function (req, res) {
 //POST /users
 app.post("/users", function (req, res) {
 	var body = _.pick(req.body, "email", "password");
-	console.log(req.body);
 
 	db.user.create(body).then(function (user) {		
 		res.json(user.toPublicJSON());
@@ -178,7 +173,8 @@ app.post("/users/login", function (req, res) {
 		res.status(401).send();
 	});
 
-})
+});
+
 
 db.sequelize.sync().then(function () {
 	app.listen(PORT, function() {

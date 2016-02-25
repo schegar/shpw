@@ -5,16 +5,10 @@ app.AccountsView = Backbone.View.extend({
 
 
     initialize: function( initialAccounts ) {      
-        this.collection = new app.Accounts();
+        this.collection = new app.Accounts();   
 
-        $.ajaxSetup({
-            headers: {"Auth": Cookies.get("Auth")}
-        });        
-
-        this.collection.fetch({
-            reset:true
-        });
-        this.render();
+        this.collection.fetch({reset:true});
+        this.render();        
 
         this.listenTo(this.collection, "add", this.renderAccount);
         this.listenTo(this.collection, "reset", this.render);
@@ -28,7 +22,10 @@ app.AccountsView = Backbone.View.extend({
         e.preventDefault();
         var formData = {};
 
+        console.log("Add account");
+
         $("#addAccount div").children("input").each(function (i, el) {
+            console.log($(el).val());
             if ($(el).val() != "") {
                 formData[el.id] = $(el).val();
             }
@@ -40,13 +37,30 @@ app.AccountsView = Backbone.View.extend({
     render: function() {
         this.collection.each(function( item ) {
             this.renderAccount(item);
-        }, this );
+        }, this );        
     },
 
     renderAccount: function( item ) {
         var accountView = new app.AccountView({
             model: item
         });
-        this.$("#accountTable").append( accountView.render().el );
+        
+        this.$("#accountTable").append( accountView.render().el);
+        $(".table-name").editable(getEditableParams("name", accountView));
+        $(".table-username").editable(getEditableParams("username", accountView));
+        $(".table-password").editable(getEditableParams("password", accountView));
     }
 });
+
+function getEditableParams(fieldName, view) {
+    return {
+            type        : 'text',
+            name        : fieldName,
+            pk          : view.model.get("id"),
+            url         : '',
+            success     : function(response, newValue) {     
+                view.model.set(fieldName, newValue);
+                view.model.save(fieldName, newValue);
+            }
+    }
+}

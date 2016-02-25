@@ -1,125 +1,145 @@
-<!DOCTYPE HTML>
-<html>
-	<head>
-	    <meta charset="UTF-8">
-	    <title>Title</title>
-	    <link href="css/bootstrap.min.css" rel="stylesheet">
-	</head>
-	<body>
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>SHPW</title>
 
-		<div class="vertical-center">
-			<div class="container">
-				<div id="accounts">
-					<div class="row">
-						<div class="col-md-4 col-md-offset-4 well">
-							<form id="addAccount" onsubmit="return addAccount();">
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+    <link href="css/bootstrap-editable.css" rel="stylesheet">
+    <link href="css/styles.css" rel="stylesheet">
 
-							<div>
+  </head>
 
-								<div class="form-group">
-									<label >Name</label>
-									<div class="input-group">
-										<span class="input-group-addon">
-											<i class="glyphicon glyphicon-user"></i>
-										</span>
-										<input class="form-control" type="text" name="name" id="name"/>
-									</div>							
-								</div>
-									
-								<div class="form-group">
-									<label>Username</label>
-									<div class="input-group">
-										<span class="input-group-addon">
-											<i class="glyphicon glyphicon-comment"></i>
-										</span>
-										<input class="form-control" type="text" name="username" id="username"/>
-									</div>						
-								</div>
+  <body>
 
-								<div class="form-group">
-									<label>Password</label>
-									<div class="input-group">
-										<span class="input-group-addon">
-											<i class="glyphicon glyphicon-comment"></i>
-										</span>
-										<input class="form-control" type="text" name="password" id="password"/>
-									</div>						
-								</div>
+  <div id="accounts">
 
-								<div class="form-group">
-									<button class="btn btn-primary btn-block" id="add">Add</button>	
-								</div>	
-
-							</div>
-
-							</form>
-						</div>
-					</div>
-
-					<div class="row">
-						<div class="col-md-8 col-md-offset-2 well">
-							<table id="accountTable" class="table table-striped">
-								<thead>
-									<tr><td>Name</td><td>Username</td><td>Password</td></tr>
-								</thead>
-								<tbody>
-									<script type="text/template" id="accountTemplate">
-										<td><%= name %></td>
-										<td><%= username %></td>
-										<td><%= password %></td>
-										<td><button class="delete">Delete</button></td>
-									</script>
-								</tbody>
-							</table>
-						</div>
-					</div>
-				</div>
-			</div>
-		</div>
-		
-		<script src="js/lib/js.cookie.js"></script>
-		<script src="js/lib/jquery-2.2.0.min.js"></script>
-        <script src="js/lib/underscore.js"></script>
-        <script src="js/lib/backbone-min.js"></script>
-        <script src="js/models/account.js"></script>
-        <script src="js/collections/accounts.js"></script>        
-        <script src="js/views/account.js"></script>
-        <script src="js/views/accounts.js"></script>
-        <script src="js/app.js"></script>
-
-		<script type="text/javascript">
-
-			if (typeof Cookies.get("Auth") === "undefined") {
-				window.location = "/login.html";
-			} else {
-				console.log(Cookies.get("Auth"));
-			}
-			
-			/*function addAccount() {				
-				event.preventDefault();
-		        var account = JSON.stringify({
-		            name: $("#name").val(),
-		            username: $("#username").val(),
-		            password: $("#password").val()
-		        });
-
-		        $.ajax({
-		            url: "/accounts",
-		            type: "POST",
-		            data: loginDetails,
-		            success: function (data, textStatus, request) {
-		              console.log(data);
-		              var token = request.getResponseHeader("Auth");
-		              Cookies.set("Auth", token);
-		            },
-		            contentType: "application/json",
-		            dataType: "json"
-		          });
-
-			}*/
+    <div class="modal fade add-account-modal" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            <h4 class="modal-title" id="exampleModalLabel">Add account</h4>
+          </div>
+          <div class="modal-body">
+            <form id="addAccount">
+              <div>
+                <div class="form-group">
+                  <label for="recipient-name" class="control-label">Name</label>
+                  <input type="text" class="form-control" name="name" id="name">
+                </div>
+                <div class="form-group">
+                  <label for="message-text" class="control-label">Username/Email</label>
+                  <input type="text" class="form-control" id="username">
+                </div>
+                <div class="form-group">
+                  <label for="message-text" class="control-label">Password</label>
+                  <input type="text" class="form-control" id="password">
+                </div>
+                <div class="form-group">
+                  <label for="message-text" class="control-label">Comment</label>
+                  <textarea class="form-control" id="comment"></textarea>
+                </div>
+              </div>
+            </form>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+            <button type="button" class="btn btn-success" data-dismiss="modal" id="add">Add</button>
+          </div>
+        </div>
+      </div>
+    </div>
 
 
-		</script>
+    <nav class="navbar navbar-inverse navbar-fixed-top">
+      <div class="container-fluid">
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="navbar-brand" href="#">Self Hosted Password Manager</a>
+        </div>
+        <div id="navbar" class="navbar-collapse collapse">
+          <ul class="nav navbar-nav navbar-right">
+            <li><a href="#">Dashboard</a></li>
+            <li><a href="#">Settings</a></li>
+            <li><a href="#">Profile</a></li>
+            <li><a href="#">Help</a></li>
+          </ul>
+          <form class="navbar-form navbar-right">
+            <input type="text" class="form-control" placeholder="Search...">
+          </form>
+        </div>
+      </div>
+    </nav>
 
-	</body>
+    <div class="container-fluid">
+      <div class="row">
+        <div class="col-sm-3 col-md-2 sidebar">
+          <ul class="nav nav-sidebar">
+            <li class="active"><a href="#">Passwords <span class="sr-only">(current)</span></a></li>
+          </ul>
+        </div>
+        <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
+          <h1 class="page-header">Passwords 
+            <div class="pull-right">
+              <button type="button" class="btn btn-success btn-large" data-toggle="modal" data-target=".add-account-modal">Add</button>
+            </div>
+          </h1>
+          
+          <div class="table-responsive">
+            <table id="accountTable" class="table table-striped table-bordered">
+                <thead>
+                  <tr><th>Name</th><th>Username</th><th>Password</th><th>Options</th></tr>
+                </thead>
+                <tbody>   
+                  <script type="text/template" id="accountTemplate">
+                    <td><a href="#" class="table-name"><%= name %></a></td>
+                    <td><a href="#" class="table-username"><%= username %></a></td>
+                    <td><a href="#" class="table-password"><%= password %></a></td>
+                    <td><button class="delete">Delete</button></td>
+                  </script>                                 
+                </tbody>
+              </table>
+          </div>
+        </div>
+      </div>
+    </div>    
+
+    <script src="js/lib/js.cookie.js"></script>
+
+    <script src="js/lib/jquery-2.2.0.min.js"></script>
+    <script src="js/lib/underscore.js"></script>
+    <script src="js/lib/backbone-min.js"></script>
+    <script src="js/lib/bootstrap.min.js"></script>
+    <script src="js/lib/bootstrap-editable.js"></script>
+    
+    <script src="js/models/account.js"></script>
+    <script src="js/collections/accounts.js"></script>        
+    <script src="js/views/account.js"></script>
+    <script src="js/views/accounts.js"></script>
+    <script src="js/app.js"></script>
+    
+
+    <script type="text/javascript">
+
+      if (typeof Cookies.get("Auth") === "undefined") {
+        window.location = "/login.html";
+      } else {
+        console.log(Cookies.get("Auth"));
+      }
+
+      $.fn.editable.defaults.mode = 'inline';
+
+    </script>
+
+    
+  </div>
+  </body>
 </html>

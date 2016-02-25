@@ -24,7 +24,6 @@ module.exports = function (sequelize, DataTypes) {
 			allowNull: false,
 			set: function (value) {
 				var salt = bcrypt.genSaltSync(10);
-				//var hashedPassword = cryptojs.HASH.sha512(value);
 				var hashedPassword = bcrypt.hashSync(value, salt);
 
 				this.setDataValue("password", value);
@@ -96,14 +95,11 @@ module.exports = function (sequelize, DataTypes) {
 				}
 
 				try {
-					var stringData = JSON.stringify({id: this.get("id"), type: type});
-					//console.log("String: " + stringData);
-					var encryptedData = cryptojs.AES.encrypt(stringData, "Self Hosted Password Manager").toString();
-					//console.log("Data: " +encryptedData);
+					var stringData = JSON.stringify({id: this.get("id"), type: type});					
+					var encryptedData = cryptojs.AES.encrypt(stringData, "Self Hosted Password Manager").toString();					
 					var token = jwt.sign({
 						token: encryptedData
 					}, "shpw");
-					//console.log("Token: " +token);
 					return token;
 				} catch(e) {
 					console.log(e);
