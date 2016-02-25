@@ -4,6 +4,7 @@ app.Account = Backbone.Model.extend({
     defaults: {
         name: 'ExampleAccount',
         username: 'example@example.com',
-        password: 'password123'
+        password: 'password123',
+        comment: ""
     }
 });

@@ -1,7 +1,6 @@
 var cryptojs = require("crypto-js");
 var bcrypt = require("bcryptjs");
 var _ = require("underscore");
-var color = require("colors");
 
 module.exports = function (sequelize, DataTypes) {
 	return sequelize.define("account", {
@@ -39,8 +38,7 @@ module.exports = function (sequelize, DataTypes) {
 			type: DataTypes.TEXT,
 			validate: {
 				len: [0, 500]
-			},
-			defaultValue: ""
+			}
 		}
 	}, {
 		instanceMethods: {

@@ -33,8 +33,13 @@ var errorField = $("#error");
             data: loginDetails,
             success: function (data, textStatus, request) {
               var token = request.getResponseHeader("Auth");
-              Cookies.set("Auth", token);
+              Cookies.set("Auth", token, {expires: 3});
               window.location = "/index.html"
+            },
+            error: function (xhr, ajaxOptions, thrownError) {
+              if (xhr.status === 401) {
+                showError("Wrong username/password");
+              }
             },
             contentType: "application/json",
             dataType: "json"
@@ -64,10 +69,13 @@ var errorField = $("#error");
               data: registerDetails,
               success: function (data, textStatus, request) {
                 $("#success").show();
+                setTimeout(function () {
+                  $("#success").hide();
+                }, 3000);
               },
               error: function (xhr) {
                 var response = JSON.parse(xhr.responseText)
-                showError(response.errors[0].message);
+                showError(titleCase(response.errors[0].message));                
               },
               contentType: "application/json",
               dataType: "json"
@@ -79,4 +87,11 @@ var errorField = $("#error");
         console.log(error);
         $("#errorValue").text(error);
         errorField.show();
+        setTimeout(function () {
+          errorField.hide();
+        }, 3000);
+      }
+
+      function titleCase(string) {
+        return string.charAt(0).toUpperCase() + string.slice(1);
       }

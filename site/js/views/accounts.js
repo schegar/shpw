@@ -22,8 +22,6 @@ app.AccountsView = Backbone.View.extend({
         e.preventDefault();
         var formData = {};
 
-        console.log("Add account");
-
         $("#addAccount div").children("input").each(function (i, el) {
             console.log($(el).val());
             if ($(el).val() != "") {
@@ -49,6 +47,7 @@ app.AccountsView = Backbone.View.extend({
         $(".table-name").editable(getEditableParams("name", accountView));
         $(".table-username").editable(getEditableParams("username", accountView));
         $(".table-password").editable(getEditableParams("password", accountView));
+        $(".table-comment").editable(getEditableParams("comment", accountView));
     }
 });
 

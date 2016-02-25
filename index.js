@@ -5,6 +5,13 @@ var bodyParser = require("body-parser");
 var middleware = require("./middleware.js")(db);
 var cryptojs = require("crypto-js");
 var path = require("path");
+var fs = require("fs");
+var dir = './data';
+var server;
+
+if (!fs.existsSync(dir)){
+    fs.mkdirSync(dir);
+}
 
 var app = express();
 var PORT = process.env.PORT || 3000;
@@ -108,7 +115,7 @@ app.delete("/accounts/:id", middleware.requireAuthentication, function (req, res
 // PUT /accounts/:id
 app.put("/accounts/:id", middleware.requireAuthentication, function (req, res) {
 	var accountId = parseInt(req.params.id, 10);
-	var body = _.pick(req.body, "name", "username", "password");
+	var body = _.pick(req.body, "name", "username", "password", "comment");
 	var attributes = {};
 
 	if (body.hasOwnProperty("name")) {
@@ -121,6 +128,10 @@ app.put("/accounts/:id", middleware.requireAuthentication, function (req, res) {
 
 	if (body.hasOwnProperty("password")) {
 		attributes.password = body.password;
+	};
+
+	if (body.hasOwnProperty("comment")) {
+		attributes.comment = body.comment;
 	};
 
 	db.account.findOne({
@@ -177,7 +188,7 @@ app.post("/users/login", function (req, res) {
 
 
 db.sequelize.sync().then(function () {
-	app.listen(PORT, function() {
+	server = app.listen(PORT, function() {
 		console.log("Express listening on port " + PORT + " !");
 	});
 });
