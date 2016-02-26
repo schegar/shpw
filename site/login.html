@@ -4,17 +4,29 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="shortcut icon" type="image/x-icon" href="img/favicon.ico">
     <title>SHPW Login</title>
 
 
     <link href="css/bootstrap.min.css" rel="stylesheet">
     <link href="css/login.css" rel="stylesheet">
 
+    <!-- Begin Cookie Consent plugin by Silktide - http://silktide.com/cookieconsent -->
+    <script type="text/javascript">
+        window.cookieconsent_options = {"message":"This website uses cookies to ensure you get the best experience on our website","dismiss":"Got it!","learnMore":"More info","link":null,"theme":"dark-bottom"};
+    </script>
+
+    <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/cookieconsent2/1.0.9/cookieconsent.min.js"></script>
+    <!-- End Cookie Consent plugin -->
+
   </head>
   <body>
     <div class="container">
+    <h1 align="center">Self Hosted Password Manager</h1>
+    <img class="img-responsive" src="img/shpw-logo-text-md.png" alt="SHPW">
       <div class="row">
       <div class="col-md-6 col-md-offset-3">
+       
         <div class="panel panel-login">
           <div class="panel-heading">
             <div class="row">
@@ -38,7 +50,7 @@
                   <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
                   <strong id="errorValue">You have been successfully registered!</strong>
                 </div>
-                <form id="login-form" onsubmit="return login();" role="form" style="display: block;">
+                <form id="login-form" onsubmit="login(event);" role="form" style="display: block;">
                   <div class="form-group">
                     <input type="text" name="email" id="email" tabindex="1" class="form-control" placeholder="Email Address" value="">
                   </div>
@@ -62,7 +74,7 @@
                     </div>
                   </div>
                 </form>
-                <form id="register-form" onsubmit="return register();" role="form" style="display: none;">
+                <form id="register-form" onsubmit="register(event);" role="form" style="display: none;">
                   <div class="form-group">
                     <input type="email" name="register-email" id="register-email" tabindex="1" class="form-control" placeholder="Email Address" value="" required>
                   </div>

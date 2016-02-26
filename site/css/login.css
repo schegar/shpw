@@ -1,5 +1,5 @@
 body {
-    padding-top: 90px;
+    #padding-top: 90px;
 }
 .panel-login {
 	border-color: #ccc;
@@ -96,4 +96,14 @@ body {
 	color: #fff;
 	background-color: #1CA347;
 	border-color: #1CA347;
+}
+
+.img-responsive {
+	margin: 0 auto;
+	margin-bottom: 30px;
+
+}
+
+h1 {
+	margin: 30px 0;
 }

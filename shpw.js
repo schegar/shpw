@@ -8,6 +8,7 @@ var path = require("path");
 var fs = require("fs");
 var dir = './data';
 var server;
+var APIPATH = "/shpw/api/";
 
 if (!fs.existsSync(dir)){
     fs.mkdirSync(dir);
@@ -16,15 +17,16 @@ if (!fs.existsSync(dir)){
 var app = express();
 var PORT = process.env.PORT || 3000;
 
-app.use(express.static(path.join(__dirname, "site")));
+app.use('/shpw', express.static(__dirname + '/site'));
+//app.use(express.static(path.join(__dirname, "site")));
 app.use(bodyParser.json());
 
-app.get('/', function (req, res) {
-  res.send('Hello World')
-})
+// app.get('/shpw', function (req, res) {
+//   res.send('Hello World')
+// })
 
 // GET /accounts?n=facebook&u=test@test.com
-app.get("/accounts", middleware.requireAuthentication, function(req, res){
+app.get(APIPATH+"accounts", middleware.requireAuthentication, function(req, res){
 	var query = req.query;
 	var where = {};
 
@@ -54,7 +56,7 @@ app.get("/accounts", middleware.requireAuthentication, function(req, res){
 });
 
 // GET /accounts/:id
-app.get("/accounts/:id", middleware.requireAuthentication, function (req, res) {
+app.get(APIPATH+"accounts/:id", middleware.requireAuthentication, function (req, res) {
 	var accountId = parseInt(req.params.id);
 
 	db.account.findOne({
@@ -75,7 +77,7 @@ app.get("/accounts/:id", middleware.requireAuthentication, function (req, res) {
 
 
 // POST /accounts
-app.post("/accounts", middleware.requireAuthentication, function (req, res) {
+app.post(APIPATH+"accounts", middleware.requireAuthentication, function (req, res) {
 	var body = _.pick(req.body, "name", "username", "password", "comment");
 
 	db.account.create(body).then(function (account) {		
@@ -91,7 +93,7 @@ app.post("/accounts", middleware.requireAuthentication, function (req, res) {
 });
 
 // DELETE /accounts/:id
-app.delete("/accounts/:id", middleware.requireAuthentication, function (req, res) {
+app.delete(APIPATH+"accounts/:id", middleware.requireAuthentication, function (req, res) {
 	var accountId = parseInt(req.params.id);
 
 	db.account.destroy({
@@ -113,7 +115,7 @@ app.delete("/accounts/:id", middleware.requireAuthentication, function (req, res
 });
 
 // PUT /accounts/:id
-app.put("/accounts/:id", middleware.requireAuthentication, function (req, res) {
+app.put(APIPATH+"accounts/:id", middleware.requireAuthentication, function (req, res) {
 	var accountId = parseInt(req.params.id, 10);
 	var body = _.pick(req.body, "name", "username", "password", "comment");
 	var attributes = {};
@@ -156,7 +158,7 @@ app.put("/accounts/:id", middleware.requireAuthentication, function (req, res) {
 });
 
 //POST /users
-app.post("/users", function (req, res) {
+app.post(APIPATH+"users", function (req, res) {
 	var body = _.pick(req.body, "email", "password");
 
 	db.user.create(body).then(function (user) {		
@@ -167,7 +169,7 @@ app.post("/users", function (req, res) {
 })
 
 // POST /users/login
-app.post("/users/login", function (req, res) {
+app.post(APIPATH+"users/login", function (req, res) {
 	var body = _.pick(req.body, "email", "password");
 	var userInstance;
 

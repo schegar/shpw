@@ -23,7 +23,6 @@ app.AccountsView = Backbone.View.extend({
         var formData = {};
 
         $("#addAccount div").children("input").each(function (i, el) {
-            console.log($(el).val());
             if ($(el).val() != "") {
                 formData[el.id] = $(el).val();
             }

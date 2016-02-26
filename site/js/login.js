@@ -20,7 +20,7 @@ var errorField = $("#error");
         });
       });
 
-      function login() {
+      function login(event) {
           event.preventDefault();
           var loginDetails = JSON.stringify({
             email: $("#email").val(),
@@ -28,13 +28,13 @@ var errorField = $("#error");
           });
 
           $.ajax({
-            url: "/users/login",
+            url: "/shpw/api/users/login",
             type: "POST",
             data: loginDetails,
             success: function (data, textStatus, request) {
               var token = request.getResponseHeader("Auth");
               Cookies.set("Auth", token, {expires: 3});
-              window.location = "/index.html"
+              window.location = "index.html"
             },
             error: function (xhr, ajaxOptions, thrownError) {
               if (xhr.status === 401) {
@@ -46,7 +46,7 @@ var errorField = $("#error");
           });
       }
 
-      function register() {
+      function register(event) {
           event.preventDefault();
 
           var error = "";
@@ -64,7 +64,7 @@ var errorField = $("#error");
             });
 
             $.ajax({
-              url: "/users",
+              url: "/shpw/api/users",
               type: "POST",
               data: registerDetails,
               success: function (data, textStatus, request) {
