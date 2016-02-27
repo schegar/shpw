@@ -34,7 +34,11 @@ app.AccountsView = Backbone.View.extend({
     render: function() {
         this.collection.each(function( item ) {
             this.renderAccount(item);
-        }, this );        
+        }, this );  
+        if ($("#accountTable tbody").html() !== "") {
+            $('#accountTable').DataTable();  
+        }
+
     },
 
     renderAccount: function( item ) {
