@@ -25,7 +25,7 @@ app.AccountsView = Backbone.View.extend({
 
         $("#addAccount div").children("input").each(function (i, el) {
             if ($(el).val() != "") {
-                formData[el.id] = $(el).val();
+                formData[el.id] = escapeHtml($(el).val());
             }
         });
 
@@ -41,6 +41,8 @@ app.AccountsView = Backbone.View.extend({
         }, this );  
 
         table = $('#accountTable').dataTable();  
+
+        //makeCopyable();
     },
 
     renderAccount: function( item ) {
@@ -51,3 +53,5 @@ app.AccountsView = Backbone.View.extend({
         this.$("#accountTable").append( accountView.render().el);
     }
 });
+
+

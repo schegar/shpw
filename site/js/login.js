@@ -33,7 +33,7 @@ var errorField = $("#error");
             data: loginDetails,
             success: function (data, textStatus, request) {
               var token = request.getResponseHeader("Auth");
-              Cookies.set("Auth", token, {expires: 3});
+              Cookies.set("Auth", token, {expires: 1});
               window.location = "index.html"
             },
             error: function (xhr, ajaxOptions, thrownError) {

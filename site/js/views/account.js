@@ -29,8 +29,6 @@ app.AccountView = Backbone.View.extend({
 
     editAccount: function () {
 
-        table = $('#accountTable').dataTable(); 
-
         var modelId = this.model.get("id");
         var row;
 
@@ -94,4 +92,27 @@ function reloadTable(collection) {
     $('#accountTable tbody').empty();
 
     collection.fetch({reset:true});
+
+    //makeCopyable();
+}
+
+function makeCopyable() {
+
+        table = $('#accountTable').DataTable();
+        var tableData = table.rows().data();
+        console.log(table.rows().count());
+
+        var $tablerow = $("#accountTable tr");
+
+        for (var i = 0; i <= table.rows().count(); i++) {
+
+            $tablerow.eq(i).find("td").each(function (td) {
+                if (td !== 5) {
+                    $(this).click(function () {
+                        console.log($(this).text());                       
+                    });
+                };
+            });
+
+        }
 }
